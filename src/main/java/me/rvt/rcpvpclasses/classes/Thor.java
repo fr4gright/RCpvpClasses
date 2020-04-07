@@ -20,7 +20,7 @@ import static org.bukkit.Bukkit.getServer;
 public class Thor extends Default {
 
     private boolean isAllowedToThrow, axeReady;
-    int radius = RCpvpClasses.config.getInt("settings.thorGrenadeRadius");
+    int radius = RCpvpClasses.config.getInt("settings.thor.grenadeRadius");
 
     public Thor(Player p)
 
@@ -56,7 +56,7 @@ public class Thor extends Default {
             xBlocks[blockIt] = (ballLocation.getBlockX() + radius) - blockIt;
             zBlocks[blockIt] = (ballLocation.getBlockZ() + radius) - blockIt;
         }
-        doStormthunder(ball, ballLocation, xBlocks, zBlocks, RCpvpClasses.config.getInt("settings.thorGrenadeThunderCount"));
+        doStormthunder(ball, ballLocation, xBlocks, zBlocks, RCpvpClasses.config.getInt("settings.thor.grenadeThunderCount"));
     }
 
     public void doStormthunder(Entity ball, Location loc, int[] xBlocks, int[] zBlocks, int count) {
@@ -72,14 +72,14 @@ public class Thor extends Default {
 
             ball.getWorld().strikeLightning(loc);
             getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
-                    doStormthunder(ball, loc, xBlocks, zBlocks, nextCount), RCpvpClasses.config.getInt("settings.thorGrenadeDelay"));
+                    doStormthunder(ball, loc, xBlocks, zBlocks, nextCount), RCpvpClasses.config.getInt("settings.thor.grenadeDelay"));
         }
     }
 
     public void axeReady() {
-        int cooldown = RCpvpClasses.config.getInt("settings.thorStrikeCooldown");
-        int axeDamage = RCpvpClasses.config.getInt("settings.thorAxeDmg");
-        String axeName = RCpvpClasses.config.getString("settings.items.thorWeaponName");
+        int cooldown = RCpvpClasses.config.getInt("settings.thor.strikeCooldown");
+        int axeDamage = RCpvpClasses.config.getInt("settings.thor.axeDmg");
+        String axeName = RCpvpClasses.config.getString("settings.items.thor.weaponName");
         ItemStack axe = ItemFinder.inInventory(getPlayer(), axeName);
         assert axe != null;
         Damageable meta = (Damageable) axe.getItemMeta();

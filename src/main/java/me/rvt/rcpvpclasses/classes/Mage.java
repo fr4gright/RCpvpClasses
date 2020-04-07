@@ -44,9 +44,7 @@ public class Mage extends Default {
 
     public void turnIntoIce(Entity e) {
         List < Block > destroy = new ArrayList < > ();
-        Location standAt = e.getLocation().getBlock().getRelative(BlockFace.UP).getLocation();
-
-        standAt.setY(standAt.getBlockY() - 1);
+        Location standAt = e.getLocation().getBlock().getLocation();
 
         Location[] ice = {
                 standAt.getBlock().getRelative(BlockFace.EAST).getLocation(),
@@ -55,7 +53,8 @@ public class Mage extends Default {
                 standAt.getBlock().getRelative(BlockFace.NORTH).getLocation()
         };
 
-        for (int height = 0; height < 3; height++) {
+        for (int height = 0;
+             height < RCpvpClasses.config.getInt("settings.mage.portalHeight"); height++) {
             for (Location temp: ice) {
                 if (temp.getBlock().getType() == Material.AIR) {
                     temp.getBlock().setType(Material.ICE);
@@ -66,7 +65,7 @@ public class Mage extends Default {
                 update.setY(update.getBlockY() + 1);
         }
         getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
-                deleteBlock(destroy), RCpvpClasses.config.getInt("settings.iceStunDuration"));
+                deleteBlock(destroy), RCpvpClasses.config.getInt("settings.mage.iceStunDuration"));
     }
 
     private void deleteBlock(List < Block > toAir) {
@@ -76,7 +75,7 @@ public class Mage extends Default {
     }
 
     public void spreadFire(Entity e) {
-        int radius = RCpvpClasses.config.getInt("settings.fireballRadius"),
+        int radius = RCpvpClasses.config.getInt("settings.mage.fireballRadius"),
                 xBlock = e.getLocation().getBlockX(),
                 zBlock = e.getLocation().getBlockZ();
         Location loc = new Location(e.getWorld(), xBlock, e.getLocation().getBlockY(), zBlock);
@@ -95,7 +94,7 @@ public class Mage extends Default {
 
     public void setPortal() {
         Location targetBlock = getPlayer().getTargetBlock(null,
-                RCpvpClasses.config.getInt("settings.portalGunDistance")).getLocation();
+                RCpvpClasses.config.getInt("settings.mage.portalGunDistance")).getLocation();
         Location blockAbove = targetBlock.clone();
         blockAbove.setY(blockAbove.getBlockY() + 1);
 
@@ -133,10 +132,11 @@ public class Mage extends Default {
         }
         for (Location goTo: portals) {
             if (!tped.contains(pToTP) && !goTo.equals(walksOn.getLocation())) {
-                pToTP.teleport(goTo);
+                pToTP.teleport(goTo.getBlock().getRelative(BlockFace.UP).getLocation());
                 tped.add(pToTP);
                 getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
-                        tped.remove(pToTP), RCpvpClasses.config.getInt("settings.mageTpDelay"));
+                        tped.remove(pToTP), RCpvpClasses.config.getInt("settings.mage.tpDelay"));
+                return;
             }
         }
     }

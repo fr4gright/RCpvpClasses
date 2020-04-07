@@ -3,7 +3,7 @@ version: @version@
 main: me.rvt.rcpvpclasses.RCpvpClasses
 api-version: 1.13
 prefix: RCpvpClasses
-depend: [pvparena]
+depend: [Residence]
 authors: [RvT]
 description: Custom PvP Classes for RebrovoCraft
 website: rebrovocraft.info

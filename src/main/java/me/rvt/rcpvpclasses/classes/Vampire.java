@@ -28,10 +28,10 @@ public class Vampire extends Default {
     private boolean isInvisible;
     private ItemStack invisibleItem;
     private int
-            glassCount = RCpvpClasses.config.getInt("settings.invisibleItemAmount"),
-            cooldown = RCpvpClasses.config.getInt("settings.vampireInvisibilityCooldown"),
-            wingId = RCpvpClasses.config.getInt("settings.VampWingsId"),
-            batCount = RCpvpClasses.config.getInt("settings.howManyBats");
+            glassCount = RCpvpClasses.config.getInt("settings.vampire.invisibleItemAmount"),
+            cooldown = RCpvpClasses.config.getInt("settings.vampire.invisibilityCooldown"),
+            wingId = RCpvpClasses.config.getInt("settings.vampire.wingsId"),
+            batCount = RCpvpClasses.config.getInt("settings.vampire.howManyBats");
     private Entity[] bats = new Entity[batCount];
     private List < Player > bloodSucked = new ArrayList < > ();
 
@@ -41,10 +41,10 @@ public class Vampire extends Default {
 
     public void makeInvisible() {
         invisibleItem = ItemFinder.inInventory(getPlayer(),
-                RCpvpClasses.config.getString("settings.items.vampireGlass"));
+                RCpvpClasses.config.getString("settings.items.vampire.glass"));
 
         if (invisibleItem != null && invisibleItem.getAmount() == glassCount && !isInvisible) {
-            for (int i = 0; i < RCpvpClasses.config.getInt("settings.howManyBats"); i++)
+            for (int i = 0; i < RCpvpClasses.config.getInt("settings.vampire.howManyBats"); i++)
                 bats[i] = getPlayer().getWorld().spawnEntity(getPlayer().getLocation(), EntityType.BAT);
 
             isInvisible = true;
@@ -67,7 +67,7 @@ public class Vampire extends Default {
 
     public void makeVisible() {
         invisibleItem = ItemFinder.inInventory(getPlayer(),
-                RCpvpClasses.config.getString("settings.items.vampireGlass"));
+                RCpvpClasses.config.getString("settings.items.vampire.glass"));
 
         if (isInvisible && invisibleItem != null && invisibleItem.getAmount() < glassCount) {
             for (int i = 0; i < batCount; i++)
@@ -100,8 +100,8 @@ public class Vampire extends Default {
     public void throwHeart(Player p) {
         ItemStack drop = new ItemStack(Material.REDSTONE, 1);
         ItemMeta meta = Bukkit.getItemFactory().getItemMeta(Material.REDSTONE);
-        meta.setDisplayName(RCpvpClasses.config.getString("settings.items.bloodDrop"));
-        meta.setLore(RCpvpClasses.config.getStringList("settings.bloodDropLore"));
+        meta.setDisplayName(RCpvpClasses.config.getString("settings.items.vampire.bloodDrop"));
+        meta.setLore(RCpvpClasses.config.getStringList("settings.lore.bloodDrop"));
         drop.setItemMeta(meta);
         getPlayer().getWorld().dropItemNaturally(p.getLocation(), drop);
     }
@@ -109,20 +109,20 @@ public class Vampire extends Default {
     public void walkOnBlood(Player p) {
         if (!bloodSucked.contains(p)) {
             bloodSucked.add(p);
-            p.damage(RCpvpClasses.config.getInt("settings.bloodTrapDamage"));
+            p.damage(RCpvpClasses.config.getInt("settings.vampire.bloodTrapDamage"));
             getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
-                    bloodSucked.remove(p), RCpvpClasses.config.getInt("settings.bloodTrapDelay"));
+                    bloodSucked.remove(p), RCpvpClasses.config.getInt("settings.vampire.bloodTrapDelay"));
         }
     }
 
     public void hitWithStick(Player p) {
         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,
-                RCpvpClasses.config.getInt("settings.torchHitSlowEffect"), 2));
-        dropBlood(p, RCpvpClasses.config.getInt("settings.bloodDropsAmount"));
+                RCpvpClasses.config.getInt("settings.vampire.torchHitSlowEffect"), 2));
+        dropBlood(p, RCpvpClasses.config.getInt("settings.vampire.bloodDropsAmount"));
     }
 
     private void dropBlood(Player p, int amount) {
-        if (amount > 0 && PositionCheck.isFighting(p)) {
+        if (amount > 0 && PositionCheck.isInRes(p, RCpvpClasses.arenaName)) {
             Location turnRed = p.getLocation().getBlock().getRelative(BlockFace.DOWN).getLocation().clone();
             turnRed.setY(turnRed.getY() + 1);
 
@@ -132,13 +132,13 @@ public class Vampire extends Default {
             int newAmount = --amount;
 
             getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
-                    dropBlood(p, newAmount), RCpvpClasses.config.getInt("settings.bloodDropInterval"));
+                    dropBlood(p, newAmount), RCpvpClasses.config.getInt("settings.vampire.bloodDropInterval"));
         }
     }
 
     public void stepOnBlood(Block blood) {
         getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SPEED,
-                RCpvpClasses.config.getInt("settings.bloodSpeedDuration"), 2));
+                RCpvpClasses.config.getInt("settings.vampire.bloodSpeedDuration"), 2));
         blood.setType(Material.AIR);
     }
 }

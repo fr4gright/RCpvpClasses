@@ -1,41 +1,21 @@
 package me.rvt.rcpvpclasses.tasks;
 
-import me.rvt.rcpvpclasses.RCpvpClasses;
+import com.bekvon.bukkit.residence.Residence;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.slipcor.pvparena.api.PVPArenaAPI.getArenaName;
-
 public class PositionCheck {
-    private static FileConfiguration config = RCpvpClasses.config;
+    private static Residence res = (Residence) Bukkit.getServer().getPluginManager().getPlugin("Residence");
 
-    static public boolean isInArena(Player p) {
-        List < String > arena = config.getStringList("settings.arenaNames");
-        return arena.contains(getArenaName(p));
-    }
-
-    public static boolean isFighting(Player p) {
-        return ItemFinder.inInventory(p, config.getString("settings.items.livesRemainingItem")) != null;
-    }
-
-    public static boolean hasLivesItem(Player p)
-    {
-        String itemName = RCpvpClasses.config.getString("settings.items.livesItem");
-
-        for(ItemStack i:p.getInventory().getArmorContents())
-            if (i != null && i.getItemMeta() != null && i.getItemMeta().getDisplayName().equals(itemName))
-                return true;
-
-        for(ItemStack i:p.getInventory().getContents())
-            if (i != null && i.getItemMeta() != null && i.getItemMeta().getDisplayName().equals(itemName))
-                return true;
-        return false;
+    static public boolean isInRes(Player p, String resName) {
+        if(res.getResidenceManager().getByLoc(p) != null)
+            return resName.equals(res.getResidenceManager().getByLoc(p).getResidenceName());
+        else return false;
     }
 
     public static int isAIR(Location loc) {
