@@ -1,6 +1,7 @@
 package me.rvt.rcpvpclasses.classes;
 
 import me.rvt.rcpvpclasses.RCpvpClasses;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -132,7 +133,9 @@ public class Mage extends Default {
         }
         for (Location goTo: portals) {
             if (!tped.contains(pToTP) && !goTo.equals(walksOn.getLocation())) {
-                pToTP.teleport(goTo.getBlock().getRelative(BlockFace.UP).getLocation());
+                Location upBlock = goTo.getBlock().getRelative(BlockFace.UP).getLocation();
+                pToTP.teleport(upBlock);
+                pToTP.getWorld().playEffect(upBlock, Effect.ENDER_SIGNAL, 0);
                 tped.add(pToTP);
                 getServer().getScheduler().scheduleSyncDelayedTask(JavaPlugin.getProvidingPlugin(RCpvpClasses.class), () ->
                         tped.remove(pToTP), RCpvpClasses.config.getInt("settings.mage.tpDelay"));
